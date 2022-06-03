@@ -1,16 +1,19 @@
 import express from "express";
-import bodyparser from "body-parser";
-import { graphqlHTTP } from "express-graphql";
+import bodyParser from "body-parser";
+import { graphqlHTTP } from "express-graphql"; // ES6
 import { buildSchema } from "graphql";
 import mongoose from "mongoose";
-import * as dotenv from "dotenv";
-dotenv.config();
-const app = express();
 
 let Event = require("./models/event");
 let User = require("./models/user");
+import * as dotenv from "dotenv";
 
-app.use(bodyparser.json());
+const argon2 = require("argon2");
+
+dotenv.config();
+const app = express();
+
+app.use(bodyParser.json());
 
 app.use(
   "/graphql",
@@ -24,7 +27,7 @@ app.use(
         price: Float!
         date: String!
       }
-
+      
       type User{
         _id: ID!
         email: String!
@@ -43,23 +46,24 @@ app.use(
         date: String!
       }
       
-      type RootQuery{
-        events:[Event!]!                              
-        users:[User!]!
+      type RootQuery {
+        events:[Event!]!
+        users:[User!]!                          
       }
-      type RootMutation{
+    
+      type RootMutation {
         createEvent(eventInput: EventInput): Event
-        createUser(userInput: UserInput): User
+        createUser(userInput: UserInput) : User
       }
-
-      schema{
+    
+      schema {
         query: RootQuery
         mutation: RootMutation
       }
+      
       `
     ),
     rootValue: {
-      // Queries
       events: () => {
         return Event.find()
           .then((events: any) => {
@@ -83,7 +87,7 @@ app.use(
           });
       },
       // Mutations
-      createEvent(args: any) {
+      createEvent: (args: any) => {
         const event = new Event({
           title: args.eventInput.title,
           description: args.eventInput.description,
@@ -105,34 +109,31 @@ app.use(
             throw error;
           });
       },
-      createUser(args: any) {
-        const user = new User({
-          email: args.userInput.email,
-          password: args.userInput.password,
-        });
-        return user
-          .save()
+      createUser: (args: any) => {
+        return argon2
+          .hash(args.userInput.password, 12)
+          .then(async (hashedPassword: any) => {
+            const user = new User({
+              email: args.userInput.email,
+              password: hashedPassword,
+            });
+            return user.save();
+          })
           .then((result: any) => {
-            console.log(result);
-            return {
-              ...result._doc,
-              _id: result.id,
-            };
+            return result;
           })
           .catch((error: any) => {
-            console.log(error);
             throw error;
           });
       },
-      graphiql: true,
     },
+    graphiql: true,
   })
 );
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.PASSWORD}@plansandplants.hm1jjgp.mongodb.net/${process.env.MONGODB}?retryWrites=true&w=majority
-  `
+    `mongodb+srv://${process.env.DB_USER}:${process.env.PASSWORD}@plansandplants.hm1jjgp.mongodb.net/${process.env.MONGODB}?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(3000);
