@@ -110,9 +110,16 @@ app.use(
           });
       },
       createUser: (args: any) => {
-        return argon2
-          .hash(args.userInput.password, 12)
-          .then(async (hashedPassword: any) => {
+        return User.findOne({
+          email: args.userInput.email,
+        })
+          .then((user: any) => {
+            if (user) {
+              throw new Error("This email is already registered.");
+            }
+            return argon2.hash(args.userInput.password, 12);
+          })
+          .then((hashedPassword: any) => {
             const user = new User({
               email: args.userInput.email,
               password: hashedPassword,
