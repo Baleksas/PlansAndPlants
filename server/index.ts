@@ -79,7 +79,7 @@ app.use(
         return User.find()
           .then((users: any) => {
             return users.map((user: any) => {
-              return { ...user._doc, _id: user.id };
+              return { ...user._doc, password: null, _id: user.id };
             });
           })
           .catch((error: any) => {
@@ -120,7 +120,7 @@ app.use(
             return user.save();
           })
           .then((result: any) => {
-            return result;
+            return { ...result._doc, password: null, _id: result.id };
           })
           .catch((error: any) => {
             throw error;
