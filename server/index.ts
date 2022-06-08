@@ -15,6 +15,40 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// Dynamic functions
+
+const events = (eventsIds: Array<String>) => {
+  return Event.find({
+    _id: { $in: eventsIds },
+  })
+    .then((events: Array<any>) => {
+      return events.map((event: any) => {
+        return {
+          ...event._doc,
+          _id: event.id,
+          creator: user.bind(this, event._doc.creator),
+        };
+      });
+    })
+    .catch((error: any) => {
+      throw error;
+    });
+};
+
+const user = (userId: String) => {
+  return User.findById(userId)
+    .then((user: any) => {
+      return {
+        ...user._doc,
+        _id: user.id,
+        createdEvents: events.bind(this, user.createdEvents),
+      };
+    })
+    .catch((err: any) => {
+      throw err;
+    });
+};
+
 app.use(
   "/graphql",
   graphqlHTTP({
@@ -26,12 +60,14 @@ app.use(
         description: String!
         price: Float!
         date: String!
+        creator: User!
       }
       
       type User{
         _id: ID!
         email: String!
         password: String
+        createdEvents: [Event]
       }
 
       input UserInput{
