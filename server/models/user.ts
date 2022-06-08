@@ -10,6 +10,13 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  createdEvents: [
+    {
+      type: Schema.Types.ObjectId,
+      //   Same as event model name. Now mongoose knows that there's connection
+      ref: "Event",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);
