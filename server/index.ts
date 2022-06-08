@@ -93,16 +93,27 @@ app.use(
           description: args.eventInput.description,
           price: +args.eventInput.price,
           date: new Date(args.eventInput.date),
+          creator: "62a05b42e82159c44f4f9e4f",
         });
-
+        let createdEvent: any;
         return event
           .save()
           .then((result: any) => {
-            console.log(result);
-            return {
+            createdEvent = {
               ...result._doc,
               _id: result.id,
             };
+            return User.findById("62a05b42e82159c44f4f9e4f");
+          })
+          .then((user: any) => {
+            if (!user) {
+              throw new Error("User not found");
+            }
+            user.createdEvents.push(event);
+            return user.save();
+          })
+          .then(() => {
+            return createdEvent;
           })
           .catch((error: any) => {
             console.log(error);
