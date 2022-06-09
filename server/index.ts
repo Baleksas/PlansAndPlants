@@ -104,7 +104,11 @@ app.use(
         return Event.find()
           .then((events: any) => {
             return events.map((event: any) => {
-              return { ...event._doc, _id: event.id };
+              return {
+                ...event._doc,
+                _id: event.id,
+                creator: user.bind(this, event.creator),
+              };
             });
           })
           .catch((error: any) => {
@@ -115,7 +119,12 @@ app.use(
         return User.find()
           .then((users: any) => {
             return users.map((user: any) => {
-              return { ...user._doc, password: null, _id: user.id };
+              return {
+                ...user._doc,
+                password: null,
+                _id: user.id,
+                createdEvents: events.bind(this, user.createdEvents),
+              };
             });
           })
           .catch((error: any) => {
@@ -138,6 +147,7 @@ app.use(
             createdEvent = {
               ...result._doc,
               _id: result.id,
+              creator: user.bind(this, result.creator),
             };
             return User.findById("62a05b42e82159c44f4f9e4f");
           })
