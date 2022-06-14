@@ -29,6 +29,7 @@ const user = (userId: String) => {
       return {
         ...user._doc,
         _id: user.id,
+        password: null,
         createdEvents: events.bind(this, user.createdEvents),
       };
     })
