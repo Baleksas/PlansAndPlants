@@ -2,7 +2,7 @@ import express from "express";
 let Event = require("../../models/event");
 let User = require("../../models/user");
 let Booking = require("../../models/booking");
-
+const { dateToString } = require("../../helpers/date");
 const argon2 = require("argon2");
 
 // Dynamic functions
