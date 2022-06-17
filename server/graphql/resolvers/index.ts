@@ -7,18 +7,22 @@ const argon2 = require("argon2");
 
 // Dynamic functions
 
+const transformEvent = (event: any) => {
+  return {
+    ...event._doc,
+    _id: event.id,
+    date: new Date(event._doc.date).toISOString(),
+    creator: user.bind(this, event._doc.creator),
+  };
+};
+
 const events = async (eventsIds: Array<String>) => {
   try {
     const events = await Event.find({
       _id: { $in: eventsIds },
     });
     return events.map((event: any) => {
-      return {
-        ...event._doc,
-        _id: event.id,
-        date: new Date(event._doc.date).toISOString(),
-        creator: user.bind(this, event._doc.creator),
-      };
+      return transformEvent(event);
     });
   } catch (error: any) {
     throw error;
@@ -28,12 +32,7 @@ const events = async (eventsIds: Array<String>) => {
 const singleEvent = async (eventId: String) => {
   try {
     const event = await Event.findById(eventId);
-    return {
-      ...event._doc,
-      _id: event.id,
-      date: new Date(event._doc.date).toISOString(),
-      creator: user.bind(this, event._doc.creator),
-    };
+    return transformEvent(event);
   } catch (error) {
     throw error;
   }
@@ -57,12 +56,7 @@ module.exports = {
     try {
       const events = await Event.find();
       return events.map((event: any) => {
-        return {
-          ...event._doc,
-          _id: event._doc._id.toString(),
-          date: new Date(event._doc.date).toISOString(),
-          creator: user.bind(this, event._doc.creator),
-        };
+        return transformEvent(event);
       });
     } catch (error: any) {
       throw error;
@@ -113,12 +107,7 @@ module.exports = {
     let createdEvent: any;
     try {
       const result = await event.save();
-      createdEvent = {
-        ...result._doc,
-        _id: result._doc._id.toString(),
-        date: new Date(event._doc.date).toISOString(),
-        creator: user.bind(this, result._doc.creator),
-      };
+      createdEvent = transformEvent(result);
       const creator = await User.findById("62a05b42e82159c44f4f9e4f");
       if (!creator) {
         throw new Error("User not found");
@@ -168,11 +157,7 @@ module.exports = {
   cancelBooking: async (args: any) => {
     try {
       const booking = await Booking.findById(args.bookingId).populate("event");
-      const event = {
-        ...booking.event._doc,
-        _id: booking.event.id,
-        creator: user.bind(this, booking.event._doc.creator),
-      };
+      const event = transformEvent(booking.event);
       if (booking) {
         await Booking.deleteOne({ _id: args.bookingId });
       } else {
