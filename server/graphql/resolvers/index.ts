@@ -12,7 +12,7 @@ const events = async (eventsIds: Array<String>) => {
     const events = await Event.find({
       _id: { $in: eventsIds },
     });
-    events.map((event: any) => {
+    return events.map((event: any) => {
       return {
         ...event._doc,
         _id: event.id,
@@ -20,7 +20,6 @@ const events = async (eventsIds: Array<String>) => {
         creator: user.bind(this, event._doc.creator),
       };
     });
-    return events;
   } catch (error: any) {
     throw error;
   }
