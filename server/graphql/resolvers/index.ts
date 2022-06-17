@@ -11,8 +11,19 @@ const transformEvent = (event: any) => {
   return {
     ...event._doc,
     _id: event.id,
-    date: new Date(event._doc.date).toISOString(),
+    date: dateToString(event._doc.date),
     creator: user.bind(this, event._doc.creator),
+  };
+};
+
+const transformBooking = (booking: any) => {
+  return {
+    ...booking._doc,
+    _id: booking.id,
+    user: user.bind(this, booking._doc.user),
+    event: singleEvent.bind(this, booking._doc.event),
+    createdAt: dateToString(booking.createdAt),
+    updatedAt: dateToString(booking.updatedAt),
   };
 };
 
@@ -82,14 +93,7 @@ module.exports = {
     try {
       const bookings = await Booking.find();
       return bookings.map((booking: any) => {
-        return {
-          ...booking._doc,
-          _id: booking.id,
-          user: user.bind(this, booking._doc.user),
-          event: singleEvent.bind(this, booking._doc.event),
-          createdAt: new Date(booking._doc.createdAt).toISOString(),
-          updatedAt: new Date(booking._doc.updatedAt).toISOString(),
-        };
+        return;
       });
     } catch (error) {
       throw error;
@@ -145,14 +149,7 @@ module.exports = {
       event: fetchedEvent,
     });
     const result = await booking.save();
-    return {
-      ...result._doc,
-      _id: result.id,
-      user: user.bind(this, result._doc.user),
-      event: singleEvent.bind(this, result._doc.event),
-      createdAt: new Date(result._doc.createdAt).toISOString(),
-      updatedAt: new Date(result._doc.updatedAt).toISOString(),
-    };
+    return transformBooking(result);
   },
   cancelBooking: async (args: any) => {
     try {
