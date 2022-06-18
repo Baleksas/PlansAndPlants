@@ -5,12 +5,13 @@ import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 let graphqlSchema = require("./graphql/schema/index");
 let graphqlResolver = require("./graphql/resolvers/index");
+const isAuth = require("./middleware/is-auth");
 
 dotenv.config();
 const app = express();
 
 app.use(bodyParser.json());
-
+app.use(isAuth);
 app.use(
   "/graphql",
   graphqlHTTP({
