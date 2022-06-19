@@ -10,7 +10,6 @@ const isAuth = require("./middleware/is-auth");
 dotenv.config();
 const app = express();
 
-app.use(bodyParser.json());
 app.use(isAuth);
 app.use(
   "/graphql",

@@ -19,7 +19,7 @@ module.exports = {
           userId: user.id,
           email: user.email,
         },
-        "secret",
+        "randomSecret",
         { expiresIn: "1h" }
       );
       console.log(token);
