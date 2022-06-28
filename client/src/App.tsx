@@ -30,17 +30,19 @@ import {
   ApolloProvider,
   HttpLink,
   from,
+  useQuery,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-import FormComponent from "../src/components/Auth_Form";
 
 const pages = ["Main", "Auth", "Events", "Bookings"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
 function App() {
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
       graphQLErrors.map((message, location,path) => {
-        alert(`Graphql error: ${message}`)
+        console.log(`Graphql error: ${JSON.stringify(message)}`)
+        
       })
     }
   
@@ -76,7 +78,7 @@ function App() {
     setAnchorElUser(null);
   };
   
-  
+
   return (  
     <ApolloProvider client={client}>
     <Router>

@@ -3,6 +3,7 @@ import {
   Button,
   FormControl,
   FormHelperText,
+  FormLabel,
   Grid,
   Input,
   InputAdornment,
@@ -10,12 +11,11 @@ import {
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import KeyIcon from "@mui/icons-material/Key";
 import Layout from "./Layout";
 import { Form, Formik } from "formik";
-import { InputField } from "./InputField";
 import {
   ApolloClient,
   InMemoryCache,
@@ -24,30 +24,24 @@ import {
   from,
   useMutation,
 } from "@apollo/client";
-import {useQuery,gql} from '@apollo/client'
+import { useQuery, gql } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-import {CREATE_USER} from  '../graphql/Mutations'
-import { GET_EVENTS } from "../graphql/Queries";
-
+import { CREATE_USER } from "../graphql/Mutations";
+import { InputField } from "./InputField";
 
 const Auth_Form = () => {
-  
-  const [mutateFunction, { data, loading, error }]= useMutation(CREATE_USER)
-  // const {data,loading,error}=useQuery(GET_EVENTS)
+  const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
 
   return (
     <Layout variant="regular">
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={
-          async ()=>{
-            console.log('submitting')
-            await mutateFunction({variables: {email: "alexas3", password:"alexas3"}})
-            console.log('after')
+        onSubmit={async (values, { setErrors }) => {
+          await createUser({
+            variables: { email: values.email, password: values.password },
+          });
+        }}
 
-          }
-        }
-        
         // onSubmit={async (values, { setErrors }) => {
         //   const response = await login(values);
         //   if (response.data?.login.errors) {
@@ -62,24 +56,30 @@ const Auth_Form = () => {
         //   }
         // }}
       >
-       
         {({ isSubmitting }) => (
           <Form>
-            <InputField
-              name="email"
-              placeholder="email"
-              // id="email"
-              label="Email"
-            />
-            <Box mt={4}>
+            <FormControl>
               <InputField
-                // error={}
-                // helperText="Incorrect password."
-                name="password"
-                // id="password"
-                type="password"
-                label="Password"
+                name="email"
+                placeholder="email"
+                id="email"
+                label="Email"
+                // error={!!error}
+                // helperText={error?.message}
               />
+            </FormControl>
+
+            <Box mt={4}>
+              <FormControl>
+                <InputField
+                  // error={}
+                  // helperText="Incorrect password."
+                  name="password"
+                  id="password"
+                  type="password"
+                  label="Password"
+                />
+              </FormControl>
             </Box>
             {/* <Box mt={2}>
               <NextLink href="/forgot-password">
@@ -87,7 +87,7 @@ const Auth_Form = () => {
               </NextLink>
             </Box> */}
             <Button type="submit" variant="contained">
-              Login
+              Register
             </Button>
           </Form>
         )}
