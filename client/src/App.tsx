@@ -34,7 +34,7 @@ import {
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 
-const pages = ["Main", "Auth", "Events", "Bookings"];
+const pages = ["Main","Login", "Auth", "Events", "Bookings"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function App() {
@@ -137,6 +137,7 @@ function App() {
           <Route path="/events" element={(<Events />) as any}></Route>
           <Route path="/bookings" element={(<Bookings />) as any}></Route>
           <Route path="/auth" element={(<Auth />) as any}></Route>
+          <Route path="/login" element={(<Auth />) as any}></Route>
           <Route path="/" element={(<Main />) as any}></Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

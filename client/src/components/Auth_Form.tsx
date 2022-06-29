@@ -8,10 +8,11 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  Link,
   OutlinedInput,
   TextField,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import KeyIcon from "@mui/icons-material/Key";
 import Layout from "./Layout";
@@ -28,18 +29,42 @@ import { useQuery, gql } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { CREATE_USER } from "../graphql/Mutations";
 import { InputField } from "./InputField";
+import { LOGIN } from "../graphql/Queries";
 
-const Auth_Form = () => {
-  const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
+const Auth_Form = ({email, password}:any) => {
+  // const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
+  const [isLogin, setIsLogin]=useState(false)
+
+  const {data, loading,error, refetch} = useQuery(LOGIN,{
+    variables: {
+       email:email, password:password
+    }
+  });
+  
+  const changeStatus=()=>{
+     setIsLogin((prev)=>!prev)
+  }
 
   return (
     <Layout variant="regular">
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          await createUser({
-            variables: { email: values.email, password: values.password },
-          });
+          if (!isLogin){
+            // register
+            // await createUser({
+            //   variables: { email: values.email, password: values.password },
+            // });
+          }
+          else {
+            // login
+            await refetch({
+              email:values.email, password:values.password
+            })
+            console.log("data:",data)
+            console.log("error:",error)
+
+          }
         }}
 
         // onSubmit={async (values, { setErrors }) => {
@@ -57,7 +82,8 @@ const Auth_Form = () => {
         // }}
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form >
+            <Box m={2}>
             <FormControl>
               <InputField
                 name="email"
@@ -68,8 +94,8 @@ const Auth_Form = () => {
                 // helperText={error?.message}
               />
             </FormControl>
-
-            <Box mt={4}>
+            </Box>
+            <Box m={2}>
               <FormControl>
                 <InputField
                   // error={}
@@ -86,9 +112,14 @@ const Auth_Form = () => {
                 <Link ml="auto">Forgot password?</Link>
               </NextLink>
             </Box> */}
+            <Box m={1}>
             <Button type="submit" variant="contained">
-              Register
+              {isLogin? "Login" : "Register"}
             </Button>
+            <Link m={1} variant="body2" onClick={changeStatus}>
+              {isLogin? "Don't have an account yet? Register" : "Already have an account? Login"}
+            </Link>
+            </Box>
           </Form>
         )}
       </Formik>
