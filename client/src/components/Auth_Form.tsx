@@ -1,35 +1,14 @@
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  Input,
-  InputAdornment,
-  InputLabel,
-  Link,
-  OutlinedInput,
-  TextField,
+  Button, Link
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import KeyIcon from "@mui/icons-material/Key";
-import Layout from "./Layout";
 import { Form, Formik } from "formik";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  HttpLink,
-  from,
-  useMutation,
-} from "@apollo/client";
-import { useQuery, useLazyQuery, gql } from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
+import { useState } from "react";
 import { CREATE_USER } from "../graphql/Mutations";
-import { InputField } from "./InputField";
 import { LOGIN } from "../graphql/Queries";
+import { InputField } from "./InputField";
+import Layout from "./Layout";
 
 const Auth_Form = () => {
   const [createUserFc, userObject] = useMutation(CREATE_USER);
@@ -69,52 +48,23 @@ const Auth_Form = () => {
             }
           }
         }}
-
-        // onSubmit={async (values, { setErrors }) => {
-        //   const response = await login(values);
-        //   if (response.data?.login.errors) {
-        //     setErrors(toErrorMap(response.data.login.errors));
-        //   } else if (response.data?.login.user) {
-        //     if (typeof router.query.next === "string") {
-        //       router.push(router.query.next || "/");
-        //     } else {
-        //       // worked
-        //       router.push("/");
-        //     }
-        //   }
-        // }}
       >
-        {({ isSubmitting }) => (
           <Form>
             <Box m={2}>
-              <FormControl>
-                <InputField
-                  name="email"
-                  placeholder="email"
-                  id="email"
-                  label="Email"
-                  // error={!!error}
-                  // helperText={error?.message}
-                />
-              </FormControl>
+              <InputField
+                name="email"
+                label="email"
+                id="email"
+              />
             </Box>
             <Box m={2}>
-              <FormControl>
-                <InputField
-                  // error={}
-                  // helperText="Incorrect password."
-                  name="password"
-                  id="password"
-                  type="password"
-                  label="Password"
-                />
-              </FormControl>
+              <InputField
+                name="password"
+                id="password"
+                label="password"
+                type="password"
+              />
             </Box>
-            {/* <Box mt={2}>
-              <NextLink href="/forgot-password">
-                <Link ml="auto">Forgot password?</Link>
-              </NextLink>
-            </Box> */}
             <Box m={1}>
               <Button type="submit" variant="contained">
                 {isLogin ? "Login" : "Register"}
@@ -126,7 +76,6 @@ const Auth_Form = () => {
               </Link>
             </Box>
           </Form>
-        )}
       </Formik>
     </Layout>
   );
