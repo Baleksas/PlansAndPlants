@@ -25,45 +25,48 @@ import {
   from,
   useMutation,
 } from "@apollo/client";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, useLazyQuery, gql } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { CREATE_USER } from "../graphql/Mutations";
 import { InputField } from "./InputField";
 import { LOGIN } from "../graphql/Queries";
 
-const Auth_Form = ({email, password}:any) => {
-  // const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
-  const [isLogin, setIsLogin]=useState(false)
+const Auth_Form = () => {
+  const [createUserFc, userObject] = useMutation(CREATE_USER);
+  const [isLogin, setIsLogin] = useState(false);
 
-  const {data, loading,error, refetch} = useQuery(LOGIN,{
-    variables: {
-       email:email, password:password
-    }
-  });
-  
-  const changeStatus=()=>{
-     setIsLogin((prev)=>!prev)
-  }
+  const [loginFc, loginObject] = useLazyQuery(LOGIN);
+
+  const changeStatus = () => {
+    setIsLogin((prev) => !prev);
+  };
 
   return (
     <Layout variant="regular">
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
-          if (!isLogin){
-            // register
-            // await createUser({
-            //   variables: { email: values.email, password: values.password },
-            // });
-          }
-          else {
+          if (isLogin) {
             // login
-            await refetch({
-              email:values.email, password:values.password
-            })
-            console.log("data:",data)
-            console.log("error:",error)
-
+            try {
+              await loginFc({
+                variables: {
+                  email: values.email,
+                  password: values.password,
+                },
+              });
+            } catch (error) {
+              throw error;
+            }
+          } else {
+            // register
+            try {
+              await createUserFc({
+                variables: { email: values.email, password: values.password },
+              });
+            } catch (error) {
+              throw error;
+            }
           }
         }}
 
@@ -82,18 +85,18 @@ const Auth_Form = ({email, password}:any) => {
         // }}
       >
         {({ isSubmitting }) => (
-          <Form >
+          <Form>
             <Box m={2}>
-            <FormControl>
-              <InputField
-                name="email"
-                placeholder="email"
-                id="email"
-                label="Email"
-                // error={!!error}
-                // helperText={error?.message}
-              />
-            </FormControl>
+              <FormControl>
+                <InputField
+                  name="email"
+                  placeholder="email"
+                  id="email"
+                  label="Email"
+                  // error={!!error}
+                  // helperText={error?.message}
+                />
+              </FormControl>
             </Box>
             <Box m={2}>
               <FormControl>
@@ -113,12 +116,14 @@ const Auth_Form = ({email, password}:any) => {
               </NextLink>
             </Box> */}
             <Box m={1}>
-            <Button type="submit" variant="contained">
-              {isLogin? "Login" : "Register"}
-            </Button>
-            <Link m={1} variant="body2" onClick={changeStatus}>
-              {isLogin? "Don't have an account yet? Register" : "Already have an account? Login"}
-            </Link>
+              <Button type="submit" variant="contained">
+                {isLogin ? "Login" : "Register"}
+              </Button>
+              <Link m={1} variant="body2" onClick={changeStatus}>
+                {isLogin
+                  ? "Don't have an account yet? Register"
+                  : "Already have an account? Login"}
+              </Link>
             </Box>
           </Form>
         )}
