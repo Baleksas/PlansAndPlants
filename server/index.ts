@@ -6,9 +6,22 @@ import * as dotenv from "dotenv";
 let graphqlSchema = require("./graphql/schema/index");
 let graphqlResolver = require("./graphql/resolvers/index");
 const isAuth = require("./middleware/is-auth");
+const cors = require("cors");
 
 dotenv.config();
+
 const app = express();
+app.use(cors());
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    return res.status(200);
+  }
+  next();
+});
 
 app.use(isAuth);
 app.use(
@@ -25,7 +38,7 @@ mongoose
     `mongodb+srv://${process.env.DB_USER}:${process.env.PASSWORD}@plansandplants.hm1jjgp.mongodb.net/${process.env.MONGODB}?retryWrites=true&w=majority`
   )
   .then(() => {
-    app.listen(3000);
+    app.listen(8001);
   })
   .catch((err) => {
     console.log(err);

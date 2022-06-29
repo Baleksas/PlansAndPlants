@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import {
   BrowserRouter as Router,
@@ -15,7 +15,6 @@ import {
   AppBar,
   Toolbar,
   MenuItem,
-  Link,
   Box,
   Container,
   Typography,
@@ -25,9 +24,38 @@ import {
   Tooltip,
 } from "@mui/material";
 import Bookings from "./pages/Bookings";
-const pages = ["Main", "Auth", "Events", "Bookings"];
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+  from,
+  useQuery,
+} from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+
+const pages = ["Main","Login", "Auth", "Events", "Bookings"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
 function App() {
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      graphQLErrors.map((message, location,path) => {
+        console.log(`Graphql error: ${JSON.stringify(message)}`)
+        
+      })
+    }
+  
+  });
+  const link = from([
+    errorLink,
+    new HttpLink({ uri: "http://localhost:8001/graphql" }),
+  ]);
+  
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: link,
+  });
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -49,15 +77,18 @@ function App() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
 
-  return (
+  return (  
+    <ApolloProvider client={client}>
     <Router>
       <AppBar position="static">
         <Container sx={{ width: 1 }}>
           <Toolbar disableGutters>
             <Box sx={{ display: "flex", flexGrow: 1 }}>
               {pages.map((page) => (
-                <Box m={1}>
+                <React.Fragment key={page}>
+                <Box m={1} >
                   <Button
                     variant="contained"
                     component={RouterLink}
@@ -66,6 +97,7 @@ function App() {
                     {page}
                   </Button>
                 </Box>
+                </React.Fragment>
               ))}
             </Box>
             <Box sx={{ flexGrow: 0 }}>
@@ -105,11 +137,13 @@ function App() {
           <Route path="/events" element={(<Events />) as any}></Route>
           <Route path="/bookings" element={(<Bookings />) as any}></Route>
           <Route path="/auth" element={(<Auth />) as any}></Route>
+          <Route path="/login" element={(<Auth />) as any}></Route>
           <Route path="/" element={(<Main />) as any}></Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Box>
     </Router>
+    </ApolloProvider>
   );
 }
 
