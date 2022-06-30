@@ -1,8 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import {
-  Box,
-  Button, Link
-} from "@mui/material";
+import { Box, Button, Link } from "@mui/material";
 import { Form, Formik } from "formik";
 import { useState } from "react";
 import { CREATE_USER } from "../graphql/Mutations";
@@ -17,7 +14,7 @@ const Auth = () => {
   const [loginFc, loginObject] = useLazyQuery(LOGIN);
 
   const changeStatus = () => {
-    setIsLogin((prev:any) => !prev);
+    setIsLogin((prev: any) => !prev);
   };
 
   return (
@@ -49,33 +46,34 @@ const Auth = () => {
           }
         }}
       >
-          <Form>
-            <Box m={2}>
-              <InputField
-                name="email"
-                label="email"
-                id="email"
-              />
-            </Box>
-            <Box m={2}>
-              <InputField
-                name="password"
-                id="password"
-                label="password"
-                type="password"
-              />
-            </Box>
-            <Box m={1}>
-              <Button type="submit" variant="contained">
-                {isLogin ? "Login" : "Register"}
-              </Button>
-              <Link m={1} variant="body2" onClick={changeStatus}>
-                {isLogin
-                  ? "Don't have an account yet? Register"
-                  : "Already have an account? Login"}
-              </Link>
-            </Box>
-          </Form>
+        <Form>
+          <Box m={2}>
+            <InputField name="email" label="email" id="email" />
+          </Box>
+          <Box m={2}>
+            <InputField
+              name="password"
+              id="password"
+              label="password"
+              type="password"
+            />
+          </Box>
+          <Box m={1}>
+            <Button type="submit" variant="contained">
+              {isLogin ? "Login" : "Register"}
+            </Button>
+            <Link
+              component="button"
+              m={1}
+              variant="body2"
+              onClick={changeStatus}
+            >
+              {isLogin
+                ? "Don't have an account yet? Register"
+                : "Already have an account? Login"}
+            </Link>
+          </Box>
+        </Form>
       </Formik>
     </Layout>
   );

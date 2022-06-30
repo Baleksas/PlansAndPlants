@@ -19,24 +19,10 @@ import Events from "./pages/Events";
 import Main from "./pages/Main";
 import Navbar from "./components/Navbar";
 import Auth from "./pages/Auth";
+import { client } from "./utils/apolloClient";
 
 function App() {
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
-      graphQLErrors.map((message, location, path) => {
-        console.log(`Graphql error: ${JSON.stringify(message)}`);
-      });
-    }
-  });
-  const link = from([
-    errorLink,
-    new HttpLink({ uri: "http://localhost:8001/graphql" }),
-  ]);
-
-  const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: link,
-  });
+  
 
   return (
     <ApolloProvider client={client}>
