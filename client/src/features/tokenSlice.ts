@@ -1,21 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface TokenState {
-  token:string
+  token:string,
+  userId: string
 }
 
 const initialState: TokenState = {
   token: '',
+  userId: ''
 }
 
 export const tokenSlice = createSlice({
-  name: 'token',
+  name: 'tokenData',
   initialState,
   reducers: {
-    changeToken: (state, action: PayloadAction<string>) => {
-      state.token= action.payload
-    },
+    changeToken: (state, action) => {
+      state.token= action.payload.token
+      state.userId= action.payload.userId
+    }
   },
 })
 
