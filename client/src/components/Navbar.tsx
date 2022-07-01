@@ -14,7 +14,7 @@ import {
 import React from "react";
 import { Link, Link as RouterLink } from "react-router-dom";
 const Navbar = () => {
-  const pages = ["Main", "Auth", "Events", "Bookings"];
+  const pages = ["Main", "Auth", "Events", "Bookings", "Counter"];
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(

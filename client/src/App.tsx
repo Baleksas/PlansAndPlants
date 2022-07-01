@@ -20,29 +20,34 @@ import Main from "./pages/Main";
 import Navbar from "./components/Navbar";
 import Auth from "./pages/Auth";
 import { client } from "./utils/apolloClient";
+import {  store } from "./utils/reduxStore";
+import { Provider } from "react-redux";
 
+import Counter from "./components/Counter";
 function App() {
-  
-
+ 
   return (
-    <ApolloProvider client={client}>
-      <Router>
-        <Navbar />
-        <Box>
-          <Routes>
-            <Route path="/profile" element={(<div />) as any}></Route>
-            <Route path="/account" element={(<div />) as any}></Route>
-            <Route path="/dashboard" element={(<div />) as any}></Route>
-            <Route path="/logout" element={(<div />) as any}></Route>
-            <Route path="/events" element={(<Events />) as any}></Route>
-            <Route path="/bookings" element={(<Bookings />) as any}></Route>
-            <Route path="/auth" element={(<Auth />) as any}></Route>
-            <Route path="/" element={(<Main />) as any}></Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Box>
-      </Router>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <Router>
+          <Navbar />
+          <Box>
+            <Routes>
+              <Route path="/profile" element={(<div />) as any}></Route>
+              <Route path="/account" element={(<div />) as any}></Route>
+              <Route path="/dashboard" element={(<div />) as any}></Route>
+              <Route path="/logout" element={(<div />) as any}></Route>
+              <Route path="/events" element={(<Events />) as any}></Route>
+              <Route path="/bookings" element={(<Bookings />) as any}></Route>
+              <Route path="/auth" element={(<Auth />) as any}></Route>
+              <Route path="/counter" element={(<Counter />) as any}></Route>
+              <Route path="/" element={(<Main />) as any}></Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Box>
+        </Router>
+      </ApolloProvider>
+    </Provider>
   );
 }
 
