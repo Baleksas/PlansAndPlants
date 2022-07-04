@@ -25,28 +25,41 @@ const Auth = () => {
     setIsLogin((prev: any) => !prev);
   };
 
-  const login=async (values:{
-    email: string;
-    password: string;
-})=>{
-      // login
-      try {
-        // Graphql login function. Returns authdata if sucessfull
-        await loginFc({
-          variables: {
-            email: values.email,
-            password: values.password,
-          },
-          // Changes redux state to current logged in user details (userid, token and expiresIn)
-        }).then((loginData) => {
-          dispatch(changeToken(loginData.data.login));
-          navigate("/");
-        });
-      } catch (error) {
-        console.log(loginObject.error)
-        throw error;
-      }
-  }
+  const login = async (values: { email: string; password: string }) => {
+    // login
+    try {
+      // Graphql login function. Returns authdata if sucessfull
+      await loginFc({
+        variables: {
+          email: values.email,
+          password: values.password,
+        },
+        // Changes redux state to current logged in user details (userid, token and expiresIn)
+      }).then((loginData) => {
+        dispatch(changeToken(loginData.data.login));
+        navigate("/");
+      });
+    } catch (error) {
+      console.log(loginObject.error);
+      throw error;
+    }
+  };
+
+  const register = async (values: { email: string; password: string }) => {
+    // register
+    try {
+      // creates user in database
+      await createUserFc({
+        variables: { email: values.email, password: values.password },
+      }).then((res)=>{
+        console.log(res)
+        login(values)
+      })
+      // If succesful register, login
+    } catch (error) {
+      throw error;
+    }
+  };
 
   return (
     <Layout variant="regular">
@@ -54,17 +67,9 @@ const Auth = () => {
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           if (isLogin) {
-            login(values)
+            login(values);
           } else {
-            // register
-            try {
-              // creates user in database
-              await createUserFc({
-                variables: { email: values.email, password: values.password },
-              });
-            } catch (error) {
-              throw error;
-            }
+            register(values);
           }
         }}
       >
