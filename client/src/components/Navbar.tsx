@@ -17,12 +17,11 @@ import { changeToken } from "../features/tokenSlice";
 import { RootState } from "../utils/reduxStore";
 import Settings from "./Settings";
 const Navbar = () => {
-  const pages = ["Main", "Counter"];
+  const pages = ["Main","Events", "Counter"];
   const userData = useSelector((state: RootState) => state.token);
   const navigate = useNavigate();
 
   if (userData.userId === "") pages.splice(1, 0, "Auth");
-  if (userData.userId !== "") pages.splice(2, 0, "Events");
   if (userData.userId !== "") pages.splice(3, 0, "Bookings");
 
 

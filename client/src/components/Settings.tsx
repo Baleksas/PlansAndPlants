@@ -26,7 +26,7 @@ const Settings = ({anchorElUser, setAnchorElUser,setAnchorElNav}:any) => {
       const handleCloseUserMenu = () => {
         setAnchorElUser(null);
       };
-      
+
   return (
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">

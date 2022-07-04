@@ -31,7 +31,7 @@ function App() {
               {token!=="" && <Route path="/account" element={(<div />) as any}></Route>}
               {token!=="" && <Route path="/dashboard" element={(<div />) as any}></Route>}
               {token!=="" && <Route path="/logout" element={(<div />) as any}></Route>}
-              {token!=="" && <Route path="/events" element={(<Events />) as any}></Route>}
+              <Route path="/events" element={(<Events />) as any}></Route>
               {token!=="" && <Route path="/bookings" element={(<Bookings />) as any}></Route>}
               <Route path="/auth" element={(<Auth />) as any}></Route>
               <Route path="/counter" element={(<Counter />) as any}></Route>
