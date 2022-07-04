@@ -1,4 +1,10 @@
-import { FormLabel, FormControl, Input, TextField } from "@mui/material";
+import {
+  FormLabel,
+  FormControl,
+  Input,
+  TextField,
+  FormHelperText,
+} from "@mui/material";
 import { Field, useField } from "formik";
 import React, { HTMLInputTypeAttribute, InputHTMLAttributes } from "react";
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -21,7 +27,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   const [field, { error }] = useField(props);
   return (
     <FormControl
-      // isInvalid={!!error}
+    // isInvalid={!!error}
     >
       <FormLabel htmlFor={field.name}>{label}</FormLabel>
       <InputOrTextarea
@@ -30,7 +36,7 @@ export const InputField: React.FC<InputFieldProps> = ({
         id={field.name}
         placeholder={props.placeholder}
       />
-      {error ? <div>{error}</div> : null}
+      {error ? <FormHelperText>{error}</FormHelperText> : null}
     </FormControl>
   );
 };
