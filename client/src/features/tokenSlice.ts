@@ -3,11 +3,13 @@ import { createSlice } from '@reduxjs/toolkit'
 export interface TokenState {
   token:string,
   userId: string
+  expiresIn: number,
 }
 
 const initialState: TokenState = {
   token: '',
-  userId: ''
+  userId: '',
+  expiresIn: 0,
 }
 
 export const tokenSlice = createSlice({
@@ -17,6 +19,8 @@ export const tokenSlice = createSlice({
     changeToken: (state, action) => {
       state.token= action.payload.token
       state.userId= action.payload.userId
+      state.expiresIn= action.payload.tokenExpires
+
     }
   },
 })

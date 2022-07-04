@@ -2,33 +2,27 @@ import {
   BrowserRouter as Router,
   Navigate,
   Route,
-  Routes,
+  Routes
 } from "react-router-dom";
 
-import {
-  ApolloClient,
-  ApolloProvider,
-  from,
-  HttpLink,
-  InMemoryCache,
-} from "@apollo/client";
-import { onError } from "@apollo/client/link/error";
-import { Box } from "@mui/material";
+
+import { Box, Button } from "@mui/material";
+import Navbar from "./components/Navbar";
+import Auth from "./pages/Auth";
 import Bookings from "./pages/Bookings";
 import Events from "./pages/Events";
 import Main from "./pages/Main";
-import Navbar from "./components/Navbar";
-import Auth from "./pages/Auth";
-import { client } from "./utils/apolloClient";
-import {  store } from "./utils/reduxStore";
-import { Provider } from "react-redux";
 
 import Counter from "./components/Counter";
+import { useSelector } from "react-redux";
+import { RootState } from "./utils/reduxStore";
+import { useDispatch } from "react-redux";
+
+import { changeToken } from "./features/tokenSlice";
 function App() {
+
  
   return (
-    <Provider store={store}>
-      <ApolloProvider client={client}>
         <Router>
           <Navbar />
           <Box>
@@ -46,8 +40,6 @@ function App() {
             </Routes>
           </Box>
         </Router>
-      </ApolloProvider>
-    </Provider>
   );
 }
 

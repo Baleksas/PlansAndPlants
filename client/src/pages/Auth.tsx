@@ -16,8 +16,6 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [loginFc, loginObject] = useLazyQuery(LOGIN);
 
-  // Redux
-  const user = useSelector((state: RootState) => state.token);
   const dispatch = useDispatch();
 
   const changeStatus = () => {
@@ -32,11 +30,13 @@ const Auth = () => {
           if (isLogin) {
             // login
             try {
+              // Graphql login function. Returns authdata if sucessfull
               await loginFc({
                 variables: {
                   email: values.email,
                   password: values.password,
                 },
+                // Changes redux state to current logged in user details (userid, token and expiresIn)
               }).then((loginData) => {
                 dispatch(changeToken(loginData.data.login));
               });
@@ -46,6 +46,7 @@ const Auth = () => {
           } else {
             // register
             try {
+              // creates user in database
               await createUserFc({
                 variables: { email: values.email, password: values.password },
               });
@@ -56,19 +57,14 @@ const Auth = () => {
         }}
       >
         <Form>
-          <Box>
-            {user.token ? `${user.token}` : "no token"}
-            <br />
-            {user.userId ? `${user.userId}` : "no userId"}
-          </Box>
           <Box m={2}>
-            <InputField name="email" label="email" id="email" />
+            <InputField name="email" label="Email" id="email" />
           </Box>
           <Box m={2}>
             <InputField
               name="password"
               id="password"
-              label="password"
+              label="Password"
               type="password"
             />
           </Box>

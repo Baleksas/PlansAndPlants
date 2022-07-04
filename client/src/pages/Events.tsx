@@ -6,7 +6,6 @@ const Events = () => {
   const {data,loading,error}=useQuery(GET_EVENTS)
   useEffect(() => {
 
-    console.log(data)
   }, [data])
   
   return <div>Events</div>;

@@ -22,7 +22,6 @@ module.exports = {
         "randomSecret",
         { expiresIn: "1h" }
       );
-      console.log(token);
       return {
         userId: user.id,
         token: token,
