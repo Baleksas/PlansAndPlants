@@ -1,8 +1,10 @@
-import { from, HttpLink, ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, from, HttpLink, InMemoryCache } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 
+
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
+
+    if (graphQLErrors) {      
       graphQLErrors.map((message, location, path) => {
         console.log(`Graphql error: ${JSON.stringify(message)}`);
       });

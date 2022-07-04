@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeToken } from "../features/tokenSlice";
 import { Navigate, useNavigate } from "react-router-dom";
-import { toErrorMap } from "../utils/toErrorMap";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -26,6 +25,7 @@ const Auth = () => {
     setIsLogin((prev: any) => !prev);
   };
 
+
   return (
     <Layout variant="regular">
       <Formik
@@ -33,22 +33,22 @@ const Auth = () => {
         onSubmit={async (values, { setErrors }) => {
           if (isLogin) {
             // login
-            
+            try {
               // Graphql login function. Returns authdata if sucessfull
-              const response= await loginFc({
+              await loginFc({
                 variables: {
                   email: values.email,
                   password: values.password,
                 },
                 // Changes redux state to current logged in user details (userid, token and expiresIn)
-              })
-              if (!response.data){
-                console.log("There was an error. Please try again")
-              }
-              else{
-                dispatch(changeToken(response.data.login));
-                navigate("/")
-              }
+              }).then((loginData) => {
+                dispatch(changeToken(loginData.data.login));
+                navigate("/");
+              });
+            } catch (error) {
+              console.log(loginObject.error)
+              throw error;
+            }
           } else {
             // register
             try {
