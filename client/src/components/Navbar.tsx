@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
 import { changeToken } from "../features/tokenSlice";
 import { RootState } from "../utils/reduxStore";
@@ -32,21 +32,6 @@ const Navbar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const dispatch = useDispatch();
-
-  const logout = () => {
-    handleCloseUserMenu();
-    // Set to initial state
-    dispatch(
-      changeToken({
-        token: "",
-        userId: "",
-        expiresIn: 0,
-      })
-    );
-    navigate("/")
-  };
-
 
 
   const handleCloseUserMenu = () => {

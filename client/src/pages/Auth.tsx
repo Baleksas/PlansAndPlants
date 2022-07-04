@@ -25,6 +25,28 @@ const Auth = () => {
     setIsLogin((prev: any) => !prev);
   };
 
+  const login=async (values:{
+    email: string;
+    password: string;
+})=>{
+      // login
+      try {
+        // Graphql login function. Returns authdata if sucessfull
+        await loginFc({
+          variables: {
+            email: values.email,
+            password: values.password,
+          },
+          // Changes redux state to current logged in user details (userid, token and expiresIn)
+        }).then((loginData) => {
+          dispatch(changeToken(loginData.data.login));
+          navigate("/");
+        });
+      } catch (error) {
+        console.log(loginObject.error)
+        throw error;
+      }
+  }
 
   return (
     <Layout variant="regular">
@@ -32,23 +54,7 @@ const Auth = () => {
         initialValues={{ email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
           if (isLogin) {
-            // login
-            try {
-              // Graphql login function. Returns authdata if sucessfull
-              await loginFc({
-                variables: {
-                  email: values.email,
-                  password: values.password,
-                },
-                // Changes redux state to current logged in user details (userid, token and expiresIn)
-              }).then((loginData) => {
-                dispatch(changeToken(loginData.data.login));
-                navigate("/");
-              });
-            } catch (error) {
-              console.log(loginObject.error)
-              throw error;
-            }
+            login(values)
           } else {
             // register
             try {
