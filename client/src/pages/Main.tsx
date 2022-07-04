@@ -5,13 +5,20 @@ import { Link } from "react-router-dom";
 import { RootState } from "../utils/reduxStore";
 
 const Main = () => {
-  const userData = useSelector((state: RootState) => state.token);
+  const { token, userId } = useSelector((state: RootState) => state.token);
 
   return (
-    <div>
-      <span>In order to get access to events and bookings, login!</span>
-      <Button component={Link} to="/auth">Login</Button>
-    </div>
+    <>
+      {token === "" && (
+        <div>
+          <span>In order to get access to events and bookings, login!</span>
+          <Button component={Link} to="/auth">
+            Login
+          </Button>
+        </div>
+      )}
+      <div>Welcome, user: {userId}</div>
+    </>
   );
 };
 

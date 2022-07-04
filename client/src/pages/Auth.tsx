@@ -10,8 +10,11 @@ import { RootState } from "../utils/reduxStore";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeToken } from "../features/tokenSlice";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Auth = () => {
+  const navigate = useNavigate();
+
   const [createUserFc, userObject] = useMutation(CREATE_USER);
   const [isLogin, setIsLogin] = useState(false);
   const [loginFc, loginObject] = useLazyQuery(LOGIN);
@@ -39,6 +42,7 @@ const Auth = () => {
                 // Changes redux state to current logged in user details (userid, token and expiresIn)
               }).then((loginData) => {
                 dispatch(changeToken(loginData.data.login));
+                navigate("/")
               });
             } catch (error) {
               throw error;

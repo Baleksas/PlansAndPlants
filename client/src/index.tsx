@@ -1,6 +1,4 @@
-import {
-  ApolloProvider
-} from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { CssBaseline } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -14,11 +12,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-      <Provider store={store}>
+    <Provider store={store}>
       <ApolloProvider client={client}>
-    <CssBaseline />
-    <App />
-    </ApolloProvider>
+        <CssBaseline />
+          <App />
+      </ApolloProvider>
     </Provider>
   </React.StrictMode>
 );
