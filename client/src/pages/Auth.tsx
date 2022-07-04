@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { changeToken } from "../features/tokenSlice";
 import { Navigate, useNavigate } from "react-router-dom";
+import { toErrorMap } from "../utils/toErrorMap";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -32,21 +33,22 @@ const Auth = () => {
         onSubmit={async (values, { setErrors }) => {
           if (isLogin) {
             // login
-            try {
+            
               // Graphql login function. Returns authdata if sucessfull
-              await loginFc({
+              const response= await loginFc({
                 variables: {
                   email: values.email,
                   password: values.password,
                 },
                 // Changes redux state to current logged in user details (userid, token and expiresIn)
-              }).then((loginData) => {
-                dispatch(changeToken(loginData.data.login));
+              })
+              if (!response.data){
+                console.log("There was an error. Please try again")
+              }
+              else{
+                dispatch(changeToken(response.data.login));
                 navigate("/")
-              });
-            } catch (error) {
-              throw error;
-            }
+              }
           } else {
             // register
             try {
