@@ -109,4 +109,3 @@ const Auth = () => {
 
 export default Auth;
 
-// TODO: implement redux, store token, route pages with react-router-redux
